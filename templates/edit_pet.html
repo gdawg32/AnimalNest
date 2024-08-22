@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Pet - Employee Portal{% endblock %}
+
+{% block content %}
+<div class="py-8 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-4xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
+        <h1 class="text-3xl font-extrabold text-gray-900 mb-8">Edit Pet</h1>
+        <form method="post" action="{% url 'edit_pet' pet.id %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <div>
+                    <label for="name" class="block text-sm font-medium text-gray-900">Name</label>
+                    <input type="text" id="name" name="name" value="{{ pet.name }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="species" class="block text-sm font-medium text-gray-900">Species</label>
+                    <input type="text" id="species" name="species" value="{{ pet.species }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="breed" class="block text-sm font-medium text-gray-900">Breed</label>
+                    <input type="text" id="breed" name="breed" value="{{ pet.breed }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="age" class="block text-sm font-medium text-gray-900">Age</label>
+                    <input type="number" id="age" name="age" value="{{ pet.age }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="gender" class="block text-sm font-medium text-gray-900">Gender</label>
+                    <select id="gender" name="gender" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <option value="Male" {% if pet.gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if pet.gender == 'Female' %}selected{% endif %}>Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="adoption_status" class="block text-sm font-medium text-gray-900">Adoption Status</label>
+                    <select id="adoption_status" name="adoption_status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <option value="Available" {% if pet.adoption_status == 'Available' %}selected{% endif %}>Available</option>
+                        <option value="Pending Adoption" {% if pet.adoption_status == 'Pending Adoption' %}selected{% endif %}>Pending Adoption</option>
+                        <option value="Adopted" {% if pet.adoption_status == 'Adopted' %}selected{% endif %}>Adopted</option>
+                        <option value="Under Medical Care" {% if pet.adoption_status == 'Under Medical Care' %}selected{% endif %}>Under Medical Care</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="picture" class="block text-sm font-medium text-gray-900">Picture</label>
+                    <input type="file" id="picture" name="picture" class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-green-500 focus:border-green-500">
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300">Update Pet</button>
+            </div>
+        </form>
+
+        <h2 class="text-2xl font-semibold text-gray-900 mt-8 mb-4">Veterinary Records</h2>
+        <form method="post" action="{% url 'edit_pet' pet.id %}">
+            {% csrf_token %}
+            <div class="space-y-4">
+                <input type="hidden" name="record_id" value="{{ record.record_id }}">
+                <div>
+                    <label for="checkup_date" class="block text-sm font-medium text-gray-900">Checkup Date</label>
+                    <input type="date" id="checkup_date" name="checkup_date" value="{{ record.checkup_date }}" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                </div>
+                <div>
+                    <label for="health_issues" class="block text-sm font-medium text-gray-900">Health Issues</label>
+                    <textarea id="health_issues" name="health_issues" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">{{ record.health_issues }}</textarea>
+                </div>
+                <div>
+                    <label for="treatment_given" class="block text-sm font-medium text-gray-900">Treatment Given</label>
+                    <textarea id="treatment_given" name="treatment_given" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">{{ record.treatment_given }}</textarea>
+                </div>
+                <div>
+                    <label for="notes" class="block text-sm font-medium text-gray-900">Notes</label>
+                    <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">{{ record.notes }}</textarea>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg shadow hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300">Update Record</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Adopter Login - Animal Nest{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-center min-h-screen py-8">
+    <div class="w-full max-w-md p-8 space-y-6 bg-white border border-gray-200 rounded-lg shadow">
+        <h2 class="text-2xl font-semibold text-gray-900">Adopter Login</h2>
+        <form class="space-y-6" method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
+                <input type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+            <div>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900">Password</label>
+                <input type="password" name="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5" required>
+            </div>
+            <button type="submit" class="w-full text-white bg-green-700 hover:bg-green-800 rounded-lg text-sm px-5 py-2.5 text-center">Log In</button>
+        </form>
+        <p class="text-sm text-gray-500 mt-6 text-center">
+            Don't have an account? 
+            <a href="{% url 'adopter_signup' %}" class="text-green-700 hover:text-green-800 font-medium">Sign Up</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

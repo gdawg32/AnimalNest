@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block title %}Employee Portal - Animal Nest{% endblock %}
+
+{% block content %}
+<style>
+    /* Style for tabs */
+    .tab-container {
+        display: flex;
+        cursor: pointer;
+    }
+    .tab {
+        padding: 10px 20px;
+        margin-right: 2px;
+        border: 1px solid #ddd;
+        border-radius: 5px 5px 0 0;
+        background-color: #f1f1f1;
+        font-weight: bold;
+        text-align: center;
+    }
+    .tab.active {
+        background-color: #fff;
+        border-bottom: none;
+    }
+    .tab-content {
+        display: none;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 0 0 5px 5px;
+        background-color: #fff;
+    }
+    .tab-content.active {
+        display: block;
+    }
+    .image-container {
+        position: relative;
+        width: 12rem; /* Adjust the size as needed */
+        height: 12rem; /* Adjust the size as needed */
+        overflow: hidden;
+        border-radius: 1rem; /* More pronounced rounded corners */
+        background-color: #f8f8f8; /* Softer background color for empty spaces */
+        border: 2px solid #e0e0e0; /* Light border for definition */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .image-container img {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+<div class="py-8 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-4xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
+        <h1 class="text-2xl font-bold text-gray-900 mb-4">Welcome to the Employee Portal</h1>
+        <p class="text-gray-600 mb-4">Hello, {{ name }}! You are logged in as an employee.</p>
+        
+        <!-- Navigation Links -->
+        <div class="mb-6">
+            <a href="{% url 'employee_logout' %}" class="text-blue-600 hover:underline">Logout</a>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tab-container">
+            <div class="tab active" data-target="add-pet">Add New Pet</div>
+            <div class="tab" data-target="view-appointments">View Appointments</div>
+        </div>
+
+        <!-- Add New Pet Tab Content -->
+        <div id="add-pet" class="tab-content active">
+            <h2 class="mt-4 text-2xl font-semibold text-gray-900 mb-6">Add New Pet</h2>
+            <form method="post" action="{% url 'add_pet' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="flex flex-col space-y-4">
+                    <!-- Name -->
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-900">Name</label>
+                        <input type="text" id="name" name="name" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                    </div>
+                    
+                    <!-- Species -->
+                    <div>
+                        <label for="species" class="block text-sm font-medium text-gray-900">Species</label>
+                        <input type="text" id="species" name="species" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                    </div>
+                    
+                    <!-- Breed -->
+                    <div>
+                        <label for="breed" class="block text-sm font-medium text-gray-900">Breed</label>
+                        <input type="text" id="breed" name="breed" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    </div>
+                    
+                    <!-- Age -->
+                    <div>
+                        <label for="age" class="block text-sm font-medium text-gray-900">Age</label>
+                        <input type="number" id="age" name="age" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                    </div>
+                    
+                    <!-- Gender -->
+                    <div>
+                        <label for="gender" class="block text-sm font-medium text-gray-900">Gender</label>
+                        <select id="gender" name="gender" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Adoption Status -->
+                    <div>
+                        <label for="adoption_status" class="block text-sm font-medium text-gray-900">Adoption Status</label>
+                        <select id="adoption_status" name="adoption_status" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                            <option value="">Select Status</option>
+                            <option value="Available">Available</option>
+                            <option value="Pending Adoption">Pending Adoption</option>
+                            <option value="Adopted">Adopted</option>
+                            <option value="Under Medical Care">Under Medical Care</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Picture -->
+                    <div>
+                        <label for="picture" class="block text-sm font-medium text-gray-900">Picture</label>
+                        <input type="file" id="picture" name="picture" class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-green-500 focus:border-green-500">
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300">Add Pet</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- View Appointments Tab Content -->
+        <div id="view-appointments" class="tab-content">
+            <h2 class="mt-4 text-2xl font-semibold text-gray-900 mb-6">Manage Appointments</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for appointment in appointments %}
+                <div class="border border-gray-200 rounded-lg shadow p-4">
+                    <h3 class="text-xl font-bold text-gray-900">Appointment ID: {{ appointment.appointment_id }}</h3>
+                    <p class="text-gray-600"><span class="font-medium">Pet:</span> {{ appointment.pet.name }}</p>
+                    {% comment %} <p class="text-gray-600"><span class="font-medium">Employee:</span> {{ appointment.employee.user.username if appointment.employee else 'N/A' }}</p> {% endcomment %}
+                    <p class="text-gray-600"><span class="font-medium">Date:</span> {{ appointment.appointment_date }}</p>
+                    <p class="text-gray-600"><span class="font-medium">Purpose:</span> {{ appointment.purpose }}</p>
+                    <p class="text-gray-600">
+                        Adopter: {{ appointment.adopter }}  <!-- Adopter's name -->
+                    </p>
+                    {% if appointment.purpose == 'Adoption' %}
+                        <!-- Approve Adoption Button -->
+                        <form method="post" action="{% url 'approve_adoption' appointment.appointment_id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-green-600 text-white py-2 px-4 rounded-lg shadow hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300">
+                                Approve Adoption
+                            </button>
+                        </form>
+
+                        <!-- Reject Adoption Button -->
+                        <form method="post" action="{% url 'reject_adoption' appointment.appointment_id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-red-600 text-white py-2 px-4 rounded-lg shadow hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-300 mt-2">
+                                Reject Adoption
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <p class="col-span-3 text-center text-gray-600">No appointments found.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Manage Pets -->
+        <h2 class="mt-8 text-2xl font-semibold text-gray-900 mb-6">Manage Pets</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for pet in pets %}
+            <div class="border border-gray-200 rounded-lg shadow p-4">
+                <h3 class="text-xl font-bold text-gray-900">{{ pet.name }}</h3>
+                <p class="text-gray-600">{{ pet.species }} - {{ pet.breed }}</p>
+                <p class="text-gray-600">Age: {{ pet.age }}</p>
+                <p class="text-gray-600">Gender: {{ pet.gender }}</p>
+                <p class="text-gray-600">Status: {{ pet.adoption_status }}</p>
+                {% if pet.picture %}
+                <div class="image-container">
+                    <img src="{{ pet.picture.url }}" alt="{{ pet.name }}">
+                </div>                
+                {% endif %}
+                
+                <!-- Action Buttons -->
+                <div class="mt-4 flex justify-between">
+                    <a href="{% url 'edit_pet' pet.id %}" class="text-blue-600 hover:underline">Edit</a>
+                    <a href="{% url 'delete_pet' pet.id %}" class="text-red-600 hover:underline">Delete</a>
+                </div>
+            </div>
+            {% empty %}
+            <p class="col-span-3 text-center text-gray-600">No pets available.</p>
+            {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Remove 'active' class from all tabs and contents
+            document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+            
+            // Add 'active' class to clicked tab and its associated content
+            this.classList.add('active');
+            document.getElementById(this.dataset.target).classList.add('active');
+        });
+    });
+</script>
+{% endblock %}

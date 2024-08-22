@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}About - Animal Nest{% endblock %}
+
+{% block content %}
+
+<section class="bg-gray-50 dark:bg-gray-900 py-12">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-extrabold leading-tight text-gray-900 dark:text-white sm:text-4xl">
+                About Us
+            </h2>
+            <p class="mt-4 text-gray-600 dark:text-gray-400 text-lg mb-8">
+                At Animal Nest, we are dedicated to finding loving homes for pets in need. Our mission is to connect potential adopters with their perfect companions through a compassionate and thorough adoption process.
+            </p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-8">
+            <div class="w-full md:w-1/3 lg:w-1/4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-center mb-4">
+                        <i class="fas fa-heart w-16 h-16 text-green-600 dark:text-green-300 text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        Our Mission
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        To provide a safe and nurturing environment for pets and to match them with the perfect family through personalized care and support.
+                    </p>
+                </div>
+            </div>
+            <div class="w-full md:w-1/3 lg:w-1/4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-center mb-4">
+                        <i class="fas fa-hand-holding-heart w-16 h-16 text-green-600 dark:text-green-300 text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        Our Values
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Compassion, Integrity, and Excellence. We strive to uphold these values in every aspect of our work to ensure the best outcomes for our pets and adopters.
+                    </p>
+                </div>
+            </div>
+            <div class="w-full md:w-1/3 lg:w-1/4">
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <div class="flex items-center justify-center mb-4">
+                        <i class="fas fa-users w-16 h-16 text-green-600 dark:text-green-300 text-4xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        Our Team
+                    </h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Our dedicated team of professionals and volunteers work tirelessly to care for and find homes for our beloved pets.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-6">
+        <div class="mx-auto mb-8 max-w-screen-sm lg:mb-16">
+            <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Our team</h2>
+            {% comment %} <p class="font-light text-gray-500 sm:text-xl dark:text-gray-400">Explore the whole collection of open-source web components and elements built with the utility classes from Tailwind</p> {% endcomment %}
+        </div> 
+        <div class="grid gap-8 lg:gap-16 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div class="text-center text-gray-500 dark:text-gray-400">
+                <img class="mx-auto mb-4 w-36 h-36 rounded-full" src="https://5.imimg.com/data5/SELLER/Default/2020/9/FG/DP/WX/111907574/banana-tree-plant-500x500.jpg" alt="Bonnie Avatar">
+                <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <a href="#">Jeslin Gabriel</a>
+                </h3>
+                <p>Roll No. 36</p>
+            </div>
+            <div class="text-center text-gray-500 dark:text-gray-400">
+                <img class="mx-auto mb-4 w-36 h-36 rounded-full" src="https://i.ytimg.com/vi/TP_3UmN6MwU/hq2.jpg?sqp=-oaymwEYCOgCEOgCSFryq4qpAwoIARUAAIhC0AEB&rs=AOn4CLD4NMCDnGTTGfVrqeP6y2rw64YyMg" alt="Helene Avatar">
+                <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <a href="#">Joseph Alan</a>
+                </h3>
+                <p>Roll No. 37</p>
+            </div>
+            <div class="text-center text-gray-500 dark:text-gray-400">
+                <img class="mx-auto mb-4 w-36 h-36 rounded-full" src="https://wallpaperswide.com/download/ana_de_armas_beautiful_actress-wallpaper-2560x2560.jpg" alt="Jese Avatar">
+                <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <a href="#">Nakul J</a>
+                </h3>
+                <p>Roll No. 47</p>
+            </div>
+            <div class="text-center text-gray-500 dark:text-gray-400">
+                <img class="mx-auto mb-4 w-36 h-36 rounded-full" src="https://i.redd.it/guys-do-i-look-like-n-be-honest-v0-gwdz1hck14oc1.png?width=782&format=png&auto=webp&s=043a6b34d1a5f475ecae1a6ce46330432db8dfd2" alt="Joseph Avatar">
+                <h3 class="mb-1 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                    <a href="#">Gauresh P A</a>
+                </h3>
+                <p>Roll No. 67</p>
+            </div>
+        </div>  
+    </div>
+  </section>
+
+{% endblock %}
