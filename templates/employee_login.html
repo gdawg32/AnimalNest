@@ -8,14 +8,6 @@
     <div class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8">
         <h5 class="text-xl font-medium text-gray-900">Employee Login</h5>
 
-        {% if messages %}
-        <div class="my-4">
-            {% for message in messages %}
-                <div class="text-red-500 text-sm mb-2">{{ message }}</div>
-            {% endfor %}
-        </div>
-        {% endif %}
-
         <form method="post" action="{% url 'employee_login' %}" class="space-y-6">
             {% csrf_token %}
             <div>

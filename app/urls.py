@@ -20,5 +20,6 @@ urlpatterns = [
     path('pet/<str:pet_id>/adopt/', views.adopt_pet, name='adopt_pet'),
     path('approve-adoption/<str:appointment_id>/', views.approve_adoption, name="approve_adoption"),
     path('reject-adoption/<str:appointment_id>/', views.reject_adoption, name="reject_adoption"),
+    path('download-invoice/<str:adoption_id>/', views.download_invoice, name='download_invoice'),
 
 ]
