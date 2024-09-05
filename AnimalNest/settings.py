@@ -27,7 +27,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['animalnest.pythonanywhere.com']
 
 
 # Application definition
@@ -79,15 +79,17 @@ WSGI_APPLICATION = 'AnimalNest.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABSE_PORT'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'animalnest$default',
+        'USER': 'animalnest',
+        'PASSWORD': 'HelloWorld@01',
+        'HOST': 'animalnest.mysql.pythonanywhere-services.com',
+        'PORT': '3306',
+        'OPTIONS': {
+'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+}
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
