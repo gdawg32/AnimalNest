@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -7,12 +7,14 @@ from django.utils import timezone
 from django.contrib.auth.models import Group
 from .models import Pet, Adopter, VeterinaryRecord, Adoption, Appointment
 from django.contrib.auth.models import User
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-from reportlab.lib.units import inch
+from reportlab.lib.units import inch, cm
 from reportlab.lib import colors
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
-from reportlab.lib.enums import TA_CENTER
+from reportlab.pdfgen import canvas
+from PIL import Image
+from reportlab.lib.pagesizes import A4
+
+
+BACKGROUND_IMAGE_PATH = '/home/gauresh/Documents/Programming/AnimalNest/app/invoice.png'
 
 def index(request):
     return render(request, 'index.html' )
@@ -242,7 +244,7 @@ def adopt_pet(request, pet_id):
     except Adopter.DoesNotExist:
         # Handle case where user is logged in but not an adopter
         messages.warning(request, "You need to be an adopter to adopt a pet.")
-        return redirect('register_as_adopter')  # Redirect to the registration or info page
+        return redirect('adopter_signup')  # Redirect to the registration or info page
 
     if request.method == 'POST':
         # Get the appointment date from the form
@@ -315,98 +317,46 @@ def reject_adoption(request, appointment_id):
     
     return redirect('employee_portal')
 
-def download_invoice(request, adoption_id):
-    """Generate an invoice PDF for the given adoption ID."""
+def generate_invoice(response, adoption_id):
+    """Generate a PDF invoice using ReportLab."""
+    # Create a canvas object attached to the HTTP response
     adoption = get_object_or_404(Adoption, adoption_id=adoption_id)
+    c = canvas.Canvas(response, pagesize=A4)
+    width, height = A4
 
-    # Create the HttpResponse object
+    # Draw the background image
+    c.drawImage(BACKGROUND_IMAGE_PATH, 0, 0, width=width, height=height)
+
+    # Invoice number
+    c.setFont("Helvetica-Bold", 24)
+    c.setFillColor(colors.black)
+    c.drawRightString(width - 2.5 * cm, 22 * cm, f"#{adoption_id}")
+
+    # Fill 'Billed To' and 'Date' fields
+    c.setFont("Helvetica-Bold", 15)
+    c.drawString(6.5 * cm, 20.119 * cm, adoption.adopter.user.first_name + " " + adoption.adopter.user.last_name)
+    c.drawString(6.5 * cm, 18.62 * cm, adoption.adoption_date.strftime('%Y-%m-%d'))
+
+    # Pet details
+    y = 15 * cm  # Starting Y-coordinate
+    c.setFont("Helvetica", 14)
+    c.setFillColor(colors.HexColor("#2b3c56"))
+    c.drawString(2.5 * cm, y, adoption.pet.name)
+    c.drawString(10.6 * cm, y, adoption.pet.species)
+    c.drawString(14 * cm, y, adoption.pet.breed)
+    c.drawString(18 * cm, y, f"Rs. {adoption.adoption_fee}")
+
+    # Save the PDF to the response
+    c.save()
+
+def download_invoice(request, adoption_id):
+    """Generate and return an invoice PDF as an attachment."""
+    # Adjust the query to fetch using an alphanumeric field if required
+    adoption = get_object_or_404(Adoption, adoption_id=adoption_id)  # Check if ID is correct.
+
     response = HttpResponse(content_type='application/pdf')
-    response[
-        'Content-Disposition'
-    ] = f'attachment; filename="invoice_{adoption.pet.name}.pdf"'
+    response['Content-Disposition'] = f'attachment; filename="invoice_{adoption_id}.pdf"'
 
-    # Create the PDF document
-    doc = SimpleDocTemplate(
-        response,
-        pagesize=letter,
-        rightMargin=72,
-        leftMargin=72,
-        topMargin=72,
-        bottomMargin=18,
-    )
-
-    # Define styles
-    styles = getSampleStyleSheet()
-    centered_style = ParagraphStyle(name='Center', alignment=TA_CENTER)
-
-    # Add elements to the PDF
-    elements = []
-
-    # Title
-    title = Paragraph('Pet Adoption Invoice', styles['Title'])
-    elements.append(title)
-    elements.append(Spacer(1, 12))
-
-    # Invoice header
-    invoice_number = f'INV-{adoption_id.zfill(5)}'
-    header_data = [
-        ['Invoice Number', 'Date', 'Due Date'],
-        [invoice_number, adoption.adoption_date.strftime('%B %d, %Y'), 'Upon Receipt'],
-    ]
-
-    header_table = Table(header_data, colWidths=[2 * inch, 2 * inch, 2 * inch])
-    header_table.setStyle(
-        TableStyle(
-            [
-                ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-                ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-                ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-                ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-                ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ]
-        )
-    )
-    elements.append(header_table)
-    elements.append(Spacer(1, 24))
-
-    # Pet and adoption info
-    adoption_info = [
-        ['Pet Name', adoption.pet.name],
-        ['Species', adoption.pet.species],
-        ['Breed', adoption.pet.breed],
-        ['Adoption Date', adoption.adoption_date.strftime('%B %d, %Y')],
-        ['Adoption Fee', f'${adoption.adoption_fee:.2f}'],
-        ['Adopter Name', adoption.adopter],
-        ['Adopter Contact', adoption.adopter.phone_number],
-    ]
-
-    adoption_table = Table(adoption_info, colWidths=[2.5 * inch, 4 * inch])
-    adoption_table.setStyle(
-        TableStyle(
-            [
-                ('BACKGROUND', (0, 0), (0, -1), colors.grey),
-                ('TEXTCOLOR', (0, 0), (0, -1), colors.whitesmoke),
-                ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-                ('FONTNAME', (0, 0), (0, 0), 'Helvetica-Bold'),
-                ('BOTTOMPADDING', (0, 0), (0, -1), 12),
-                ('BACKGROUND', (1, 0), (-1, -1), colors.whitesmoke),
-                ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ]
-        )
-    )
-    elements.append(adoption_table)
-    elements.append(Spacer(1, 24))
-
-    # Footer note
-    footer_note = Paragraph(
-        'Thank you for adopting a pet! Your contribution helps us care for more animals in need.',
-        styles['Normal'],
-    )
-    elements.append(footer_note)
-
-    # Build the PDF
-    doc.build(elements)
+    generate_invoice(response, adoption_id)
 
     return response

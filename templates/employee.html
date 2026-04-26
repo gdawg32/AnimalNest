@@ -69,11 +69,11 @@
         <!-- Tabs -->
         <div class="tab-container bg-white rounded-lg shadow-md">
             <div class="tab flex items-center justify-center px-4 py-2 border-b-2 border-gray-300 transition duration-300 ease-in-out hover:bg-gray-100 focus:outline-none"
-                 data-target="add-pet">Add New Pet</div>
+                data-target="add-pet">Add New Pet</div>
             <div class="tab flex items-center justify-center px-4 py-2 border-b-2 border-gray-300 transition duration-300 ease-in-out hover:bg-gray-100 focus:outline-none"
-                 data-target="view-appointments">View Appointments</div>
+                data-target="view-appointments">View Appointments</div>
             <div class="tab flex items-center justify-center px-4 py-2 border-b-2 border-gray-300 transition duration-300 ease-in-out hover:bg-gray-100 focus:outline-none"
-                 data-target="view-adoptions">View Adoptions</div>
+                data-target="view-adoptions">View Adoptions</div>
         </div>
 
         <!-- Add New Pet Tab Content -->
@@ -91,13 +91,23 @@
                     <!-- Species -->
                     <div>
                         <label for="species" class="block text-sm font-medium text-gray-900">Species</label>
-                        <input type="text" id="species" name="species" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" required>
+                        <select id="species" name="species" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm" onchange="updateBreeds()" required>
+                            <option value="">Select Species</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                            <option value="bird">Bird</option>
+                            <option value="rabbit">Rabbit</option>
+                            <option value="other">Others</option>
+                            <!-- Add more species as needed -->
+                        </select>
                     </div>
-                    
+
                     <!-- Breed -->
                     <div>
                         <label for="breed" class="block text-sm font-medium text-gray-900">Breed</label>
-                        <input type="text" id="breed" name="breed" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                        <select id="breed" name="breed" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm">
+                            <option value="">Select Breed</option>
+                        </select>
                     </div>
                     
                     <!-- Age -->
@@ -113,6 +123,8 @@
                             <option value="">Select Gender</option>
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                            
                         </select>
                     </div>
                     
@@ -148,7 +160,6 @@
                 <div class="border border-gray-200 rounded-lg shadow p-4">
                     <h3 class="text-xl font-bold text-gray-900">Appointment ID: {{ appointment.appointment_id }}</h3>
                     <p class="text-gray-600"><span class="font-medium">Pet:</span> {{ appointment.pet.name }}</p>
-                    {% comment %} <p class="text-gray-600"><span class="font-medium">Employee:</span> {{ appointment.employee.user.username if appointment.employee else 'N/A' }}</p> {% endcomment %}
                     <p class="text-gray-600"><span class="font-medium">Date:</span> {{ appointment.appointment_date }}</p>
                     <p class="text-gray-600"><span class="font-medium">Purpose:</span> {{ appointment.purpose }}</p>
                     <p class="text-gray-600">
@@ -178,22 +189,24 @@
             </div>
         </div>
 
-        <!-- View Adoptions -->
-        <h2 class="mt-8 text-2xl font-semibold text-gray-900 mb-6">View Adoptions</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {% for adoption in adoptions %}
-            <div class="flex items-center p-4 border border-gray-200 rounded-lg shadow">
-                <img src="{{ adoption.pet.picture.url }}" alt="{{ adoption.pet.name }}" class="w-12 h-12 rounded-full object-cover border border-gray-300 mr-8">
-                <div>
-                    <h3 class="text-xl font-bold text-gray-900">{{ adoption.pet.name }}</h3>
-                    <p class="text-gray-600">Adopted by: {{ adoption.adopter }}</p>
-                    <p class="text-gray-600">Date: {{ adoption.adoption_date }}</p>
-                </div>
+       <!-- View Adoptions Tab Content -->
+<div id="view-adoptions" class="tab-content">
+    <h2 class="mt-4 text-2xl font-semibold text-gray-900 mb-6">View Adoptions</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for adoption in adoptions %}
+        <div class="flex items-center p-4 border border-gray-200 rounded-lg shadow">
+            <img src="{{ adoption.pet.picture.url }}" alt="{{ adoption.pet.name }}" class="w-12 h-12 rounded-full object-cover border border-gray-300 mr-8">
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">{{ adoption.pet.name }}</h3>
+                <p class="text-gray-600">Adopted by: {{ adoption.adopter }}</p>
+                <p class="text-gray-600">Date: {{ adoption.adoption_date }}</p>
             </div>
-            {% empty %}
-            <p class="col-span-3 text-center text-gray-600">No adoptions found.</p>
-            {% endfor %}
         </div>
+        {% empty %}
+        <p class="col-span-3 text-center text-gray-600">No adoptions found.</p>
+        {% endfor %}
+    </div>
+</div>
 
         <!-- Manage Pets -->
         <h2 class="mt-8 text-2xl font-semibold text-gray-900 mb-6">Manage Pets</h2>
@@ -250,6 +263,31 @@
 
 
 <script>
+
+    const breedsBySpecies = {
+        dog: ['Labrador Retriever', 'German Shepherd', 'Golden Retriever', 'Boxer', 'Pitbull', 'Yorkshire Terrier', 'Chihuahua', 'Pomeranian', 'Shih Tzu',  'Beagle', 'Husky', 'Poodle', 'Bulldog', 'Other'],
+        cat: ['Persian', 'Orange', 'Siamese', 'Maine Coon', 'Sphynx', 'Bengal', 'Ragdoll', 'British Shorthair', 'Russian Blue', 'Siberian', 'Other'],
+        bird: ['Parakeet', 'Canary', 'Finch', 'Cockatiel', 'Parrot', 'Budgie', 'Lovebird', 'Conure', 'Cockatoo', 'Macaw', 'Other'],
+        rabbit: ['Holland Lop', 'Netherland Dwarf', 'Mini Rex', 'Lionhead', 'Flemish Giant', 'Other'],
+        other: ['Other']
+    };
+
+    function updateBreeds() {
+        const species = document.getElementById('species').value;
+        const breedSelect = document.getElementById('breed');
+        breedSelect.innerHTML = '<option value="">Select Breed</option>'; 
+
+        if (species && breedsBySpecies[species]) {
+            breedsBySpecies[species].forEach(breed => {
+                const option = document.createElement('option');
+                option.value = breed;
+                option.textContent = breed;
+                breedSelect.appendChild(option);
+            });
+        }
+    }
+
+
     document.querySelectorAll('.tab').forEach(tab => {
         tab.addEventListener('click', function() {
             // Remove 'active' class from all tabs and contents

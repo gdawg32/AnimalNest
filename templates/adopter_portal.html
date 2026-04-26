@@ -50,7 +50,7 @@
                             <p class="text-sm text-gray-600 mt-1"><span class="font-medium">Pet Breed:</span> {{ adoption.pet.breed }}</p>
                         </div>
                         <img src="{{ adoption.pet.picture.url }}" alt="{{ adoption.pet.name }}" class="w-24 h-24 ml-4 mr-8 rounded-full object-cover">
-                        <a href="{% url 'download_invoice' adoption.adoption_id %}" class="ml-4 text-blue-500 hover:text-blue-600">
+                        <a href="{% url 'download_invoice' adoption_id=adoption.adoption_id %}" class="ml-4 text-blue-500 hover:text-blue-600">
                             <i class="fas fa-download text-xl"></i>
                         </a>
                     </li>

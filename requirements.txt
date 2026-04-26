@@ -13,6 +13,7 @@ Django==4.2
 exceptiongroup==1.2.2
 frozenlist==1.4.1
 gotrue==2.7.0
+gunicorn==25.3.0
 h11==0.14.0
 h2==4.1.0
 hpack==4.0.0
@@ -39,4 +40,5 @@ StrEnum==0.4.15
 supafunc==0.5.1
 typing_extensions==4.12.2
 websockets==12.0
+whitenoise==6.12.0
 yarl==1.9.4
